@@ -27,5 +27,5 @@ public class Main {
         System.in.read();
         binding
                 .thenCompose(ServerBinding::unbind)
-                .thenAccept(unbound -> system,)
+                .thenAccept(unbound -> system.terminate())
 }
