@@ -21,7 +21,7 @@ public  class MainHttp {
                 () -> parameter(QUERY_PARAMETR_URL, testUrl ->
                         parameter(QUERY_PARAMETR_COUNT, count -> {
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
-                            flow = flow.map(req -> new Pair(testUrl, count));
+                            Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, count));
 
 
                         }))));
