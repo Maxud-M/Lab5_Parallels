@@ -22,7 +22,9 @@ public  class MainHttp {
                         parameter(QUERY_PARAMETR_COUNT, count -> {
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, count));
-                            mapped.mapAsync(0, )
+                            mapped.mapAsync(0, pair -> {
+                                pair.
+                            })
 
 
                         }))));
