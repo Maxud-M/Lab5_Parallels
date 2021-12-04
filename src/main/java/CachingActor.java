@@ -14,7 +14,12 @@ public class CachingActor extends AbstractActor {
                     cache.put(m.url, m.result);
                 })
                 .match(GetMessage.class, m -> {
-                    sender().tell(cache.get(m.getUrl()))
+                    Float result = cache.get(m.getUrl());
+                    if(result == null) {
+                        sender().tell(false, self());
+                    } else {
+                        sender().tell(true, self());
+                    }
                 })
                 .build();
     }
