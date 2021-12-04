@@ -33,7 +33,9 @@ public  class MainHttp {
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, count));
                             mapped.mapAsync(1, p -> {
                                 CompletionStage<Object> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
-                                        .thenCompose();
+                                        .thenCompose(response -> {
+                                            
+                                        });
 
                             })
 
