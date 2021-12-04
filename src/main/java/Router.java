@@ -10,6 +10,7 @@ import akka.pattern.Patterns;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Flow;
 import akka.stream.javadsl.Source;
+import com.sun.xml.internal.ws.util.CompletedFuture;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -35,7 +36,7 @@ public  class MainHttp {
                                 CompletionStage<Object> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
                                         .thenCompose(response -> {
                                             if(!Objects.isNull(response)) {
-                                                return;
+                                                return CompletedFuture<>;
                                             }
                                         });
 
