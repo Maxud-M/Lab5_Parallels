@@ -6,6 +6,8 @@ import akka.http.javadsl.model.HttpResponse;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Flow;
 
+import java.util.concurrent.CompletionStage;
+
 public class Main {
     public static void main(String[] args) {
         ActorSystem system = ActorSystem.create("simplest-test");
@@ -13,5 +15,5 @@ public class Main {
         final Http http = Http.get(system);
         final Flow<HttpRequest, HttpResponse, NotUsed> routeFlow = MainHttp.createRoute(materializer, system, http)
                 .flow(system, materializer);
-        final 
+        final CompletionStage<>
 }
