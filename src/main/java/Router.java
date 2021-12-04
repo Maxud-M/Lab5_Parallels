@@ -4,6 +4,7 @@ import akka.http.javadsl.Http;
 import akka.http.javadsl.model.HttpRequest;
 import akka.http.javadsl.model.HttpResponse;
 import akka.http.javadsl.server.Route;
+import akka.japi.Pair;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Flow;
 import akka.stream.javadsl.Source;
@@ -20,7 +21,8 @@ public  class MainHttp {
                 () -> parameter(QUERY_PARAMETR_URL, testUrl ->
                         parameter(QUERY_PARAMETR_COUNT, count -> {
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
-                            flow.map()
+                            flow = flow.map(req -> new Pair(testUrl, count));
+
 
                         }))));
 
