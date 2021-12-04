@@ -7,9 +7,12 @@ import static akka.http.javadsl.server.Directives.*;
 
 public  class MainHttp {
 
+    public static final String QUERY_PARAMETR_URL = "testUrl";
+    public static final String QUERY_PARAMETR_
+
     public static Route createRoute(ActorMaterializer materializer, ActorSystem system, Http http) {
         return route(get(
-                () -> parameter("ur;"))
+                () -> parameter("testUrl"))
 
     }
 }
