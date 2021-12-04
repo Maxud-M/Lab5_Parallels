@@ -9,6 +9,7 @@ import akka.japi.Pair;
 import akka.pattern.Patterns;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Flow;
+import akka.stream.javadsl.Keep;
 import akka.stream.javadsl.Source;
 import com.sun.xml.internal.ws.util.CompletedFuture;
 
@@ -39,7 +40,7 @@ public  class MainHttp {
                                             if(!Objects.isNull(response)) {
                                                 return CompletableFuture.completedFuture(response);
                                             } else {
-                                                Source.from(Collections.singletonList()).toMat(testSink)
+                                                Source.from(Collections.singletonList()).toMat(testSink, Keep.right())
                                             }
                                         });
 
