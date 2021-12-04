@@ -15,5 +15,6 @@ public class CachingActor extends AbstractActor {
 
     public static class StoreMessage{
         String url;
+        Float 
     }
 }
