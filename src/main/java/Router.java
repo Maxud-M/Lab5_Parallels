@@ -39,7 +39,7 @@ public  class MainHttp {
                                             if(!Objects.isNull(response)) {
                                                 return CompletableFuture.completedFuture(response);
                                             } else {
-                                                Source.from(Collections.singletonList())
+                                                Source.from(Collections.singletonList()).toMat(testSink)
                                             }
                                         });
 
