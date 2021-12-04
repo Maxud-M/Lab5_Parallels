@@ -25,6 +25,7 @@ public  class MainHttp {
                         parameter(QUERY_PARAMETR_COUNT, count -> {
                             Source.from(Collections.singletonList())
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
+                            flow.map()
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, count));
                             Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.<Pair<String, Integer>> create();
                             f.mapConcat()
