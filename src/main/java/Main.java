@@ -22,5 +22,5 @@ public class Main {
                 ConnectHttp.toHost("localhost", 8080),
                 materializer
         );
-        System.out.println("Server online at http://localhost:8080/\nPress Res");
+        System.out.println("Server online at http://localhost:8080/\nPress Return");
 }
