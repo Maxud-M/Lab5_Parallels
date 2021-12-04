@@ -22,4 +22,5 @@ public class Main {
                 ConnectHttp.toHost("localhost", 8080),
                 materializer
         );
+        System.out.println();
 }
