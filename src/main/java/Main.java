@@ -16,5 +16,5 @@ public class Main {
         final Http http = Http.get(system);
         final Flow<HttpRequest, HttpResponse, NotUsed> routeFlow = MainHttp.createRoute(materializer, system, http)
                 .flow(system, materializer);
-        final CompletionStage<ServerBinding> 
+        final CompletionStage<ServerBinding> binding 
 }
