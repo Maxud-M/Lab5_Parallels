@@ -8,13 +8,23 @@ public class CachingActor extends AbstractActor {
 
     @Override
     public Receive createReceive() {
-        return ReceiveBuilder.create().match(StoreMessage).build();
+        return ReceiveBuilder.create().match(StoreMessage.class, m -> {
+            
+        }).build();
     }
 
 
 
     public static class StoreMessage{
-        String url;
-        Float 
+        private String url;
+        private Float result;
+
+        public String getUrl() {
+            return url;
+        }
+
+        public Float getResult() {
+            return result;
+        }
     }
 }
