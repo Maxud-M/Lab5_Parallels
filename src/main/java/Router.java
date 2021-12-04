@@ -9,6 +9,7 @@ import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Flow;
 import akka.stream.javadsl.Source;
 
+import java.util.Collections;
 import java.util.concurrent.CompletionStage;
 
 import static akka.http.javadsl.server.Directives.*;
@@ -22,7 +23,7 @@ public  class MainHttp {
         return route(get(
                 () -> parameter(QUERY_PARAMETR_URL, testUrl ->
                         parameter(QUERY_PARAMETR_COUNT, count -> {
-                            Source<HttpRequest, NotUsed> 
+                            Source.from(Collections.singletonList())
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, count));
                             Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.<Pair<String, Integer>> create();
