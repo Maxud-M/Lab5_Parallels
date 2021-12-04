@@ -38,6 +38,8 @@ public  class MainHttp {
                                         .thenCompose(response -> {
                                             if(!Objects.isNull(response)) {
                                                 return CompletableFuture.completedFuture(response);
+                                            } else {
+                                                
                                             }
                                         });
 
