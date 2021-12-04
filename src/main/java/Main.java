@@ -1,5 +1,6 @@
 import akka.NotUsed;
 import akka.actor.ActorSystem;
+import akka.http.javadsl.ConnectHttp;
 import akka.http.javadsl.Http;
 import akka.http.javadsl.ServerBinding;
 import akka.http.javadsl.model.HttpRequest;
@@ -18,6 +19,7 @@ public class Main {
                 .flow(system, materializer);
         final CompletionStage<ServerBinding> binding = http.bindAndHandle(
                 routeFlow,
-                ConnectHttp.toHost("localhost", 8080);
-        )
+                ConnectHttp.toHost("localhost", 8080),
+                materializer
+        );
 }
