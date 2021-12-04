@@ -31,7 +31,9 @@ public  class MainHttp {
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             flow.map(req -> new Pair(testUrl, count)).mapAsync(0, pair -> {
                                 CompletionStage<Object> result = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
-                                        .thenCompose();
+                                        .thenCompose(m -> {
+                                            if(m.equals(false))
+                                        });
                             });
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, count));
                             Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.<Pair<String, Integer>> create();
