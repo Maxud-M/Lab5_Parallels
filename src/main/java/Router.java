@@ -32,7 +32,7 @@ public  class MainHttp {
                             flow.map(req -> new Pair(testUrl, count)).mapAsync(0, pair -> {
                                 CompletionStage<Object> result = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
                                         .thenCompose(m -> {
-                                            Optional.ofNullable(m).orElse()
+                                            Optional<Object> res = Optional.ofNullable(m).orElse(m);
                                         });
                             });
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, count));
