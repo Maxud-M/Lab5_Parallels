@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static akka.http.javadsl.server.Directives.*;
@@ -36,7 +37,7 @@ public  class MainHttp {
                                 CompletionStage<Object> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
                                         .thenCompose(response -> {
                                             if(!Objects.isNull(response)) {
-                                                return CompletedFuture;
+                                                return CompletableFuture.completedFuture(response);
                                             }
                                         });
 
