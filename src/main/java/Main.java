@@ -1,5 +1,7 @@
 import akka.actor.ActorSystem;
 import akka.http.javadsl.Http;
+import akka.http.javadsl.model.HttpRequest;
+import akka.http.javadsl.model.HttpResponse;
 import akka.stream.ActorMaterializer;
 
 public class Main {
@@ -7,6 +9,6 @@ public class Main {
         ActorSystem system = ActorSystem.create("simplest-test");
         final ActorMaterializer materializer = ActorMaterializer.create(system);
         final Http http = Http.get(system);
-        final Flow()
+        final Flow<HttpRequest, HttpResponse, NotUsed>
 
 }
