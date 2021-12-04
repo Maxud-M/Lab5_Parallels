@@ -27,7 +27,6 @@ public  class MainHttp {
         return route(get(
                 () -> parameter(QUERY_PARAMETR_URL, testUrl ->
                         parameter(QUERY_PARAMETR_COUNT, count -> {
-                            Source.from(Collections.singletonList())
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             flow.map(req -> new Pair(testUrl, count)).mapAsync(0, pair -> {
                                 CompletionStage<Object> result = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
