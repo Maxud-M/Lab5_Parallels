@@ -3,9 +3,14 @@ import akka.http.javadsl.Http;
 import akka.http.javadsl.server.Route;
 import akka.stream.ActorMaterializer;
 
+import static akka.http.javadsl.server.Directives.get;
+import static akka.http.javadsl.server.Directives.route;
+
 public  class MainHttp {
 
     public static Route createRoute(ActorMaterializer materializer, ActorSystem system, Http http) {
+        return route(get(
+                () -> {}))
 
     }
 }
