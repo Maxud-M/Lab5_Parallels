@@ -36,7 +36,7 @@ public  class MainHttp {
                                 CompletionStage<Object> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
                                         .thenCompose(response -> {
                                             if(!Objects.isNull(response)) {
-                                                return CompletedFuture<>;
+                                                return CompletedFuture;
                                             }
                                         });
 
