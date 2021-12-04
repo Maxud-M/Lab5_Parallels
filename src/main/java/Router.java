@@ -34,7 +34,9 @@ public  class MainHttp {
                             mapped.mapAsync(1, p -> {
                                 CompletionStage<Object> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
                                         .thenCompose(response -> {
-                                            response
+                                            if(!Objects.isNull(response)) {
+                                                return;
+                                            }
                                         });
 
                             })
