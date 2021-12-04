@@ -7,5 +7,6 @@ public class Main {
         ActorSystem system = ActorSystem.create("simplest-test");
         final ActorMaterializer materializer = ActorMaterializer.create(system);
         final Http http = Http.get(system);
+        final Flow()
 
 }
