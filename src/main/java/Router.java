@@ -12,7 +12,10 @@ public  class MainHttp {
 
     public static Route createRoute(ActorMaterializer materializer, ActorSystem system, Http http) {
         return route(get(
-                () -> parameter("testUrl", testUrl))
+                () -> parameter(QUERY_PARAMETR_URL, testUrl ->
+                        parameter(QUERY_PARAMETR_COUNT, count -> {
+                            
+                        }))));
 
     }
 }
