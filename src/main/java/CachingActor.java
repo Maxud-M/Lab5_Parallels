@@ -4,7 +4,7 @@ import akka.japi.pf.ReceiveBuilder;
 import java.util.HashMap;
 
 public class CachingActor extends AbstractActor {
-    HashMap<String, Float>
+    HashMap<String, Float> cache = new HashMap<>();
 
     @Override
     public Receive createReceive() {
@@ -13,5 +13,7 @@ public class CachingActor extends AbstractActor {
 
 
 
-    public static class StoreMessage()
+    public static class StoreMessage{
+        String url;
+    }
 }
