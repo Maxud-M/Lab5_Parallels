@@ -11,6 +11,7 @@ public class Main {
         ActorSystem system = ActorSystem.create("simplest-test");
         final ActorMaterializer materializer = ActorMaterializer.create(system);
         final Http http = Http.get(system);
-        final Flow<HttpRequest, HttpResponse, NotUsed> routeFlow = MainHttp.createRoute(materializer, system, http).flow(system, materializer);
-
+        final Flow<HttpRequest, HttpResponse, NotUsed> routeFlow = MainHttp.createRoute(materializer, system, http)
+                .flow(system, materializer);
+        
 }
