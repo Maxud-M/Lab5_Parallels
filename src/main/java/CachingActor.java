@@ -5,7 +5,7 @@ import akka.japi.pf.ReceiveBuilder;
 import java.util.HashMap;
 
 public class CachingActor extends AbstractActor {
-    HashMap<String, Float> cache = new HashMap<>();
+    HashMap<String, Long> cache = new HashMap<>();
 
     @Override
     public Receive createReceive() {
@@ -14,8 +14,10 @@ public class CachingActor extends AbstractActor {
                     cache.put(m.url, m.result);
                 })
                 .match(GetMessage.class, m -> {
-                    Float result = cache.get(m.getUrl());
-                    sender().tell(cache.get(m.getUrl()), self());
+                    Long result = cache.get(m.getUrl());
+                    if(result != null) {
+                        sender().tell(result, self());
+                    }
                 })
                 .build();
     }
@@ -35,17 +37,17 @@ public class CachingActor extends AbstractActor {
 
     public static class StoreMessage{
         private String url;
-        private Float result;
+        private Long result;
 
         public String getUrl() {
             return url;
         }
 
-        public Float getResult() {
+        public Long getResult() {
             return result;
         }
 
-        StoreMessage(String url, Float result) {
+        StoreMessage(String url, Long result) {
             this.url = url;
             this.result = result;
         }

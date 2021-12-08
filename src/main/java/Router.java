@@ -8,13 +8,11 @@ import akka.http.javadsl.server.Route;
 import akka.japi.Pair;
 import akka.pattern.Patterns;
 import akka.stream.ActorMaterializer;
-import akka.stream.javadsl.Flow;
-import akka.stream.javadsl.Keep;
-import akka.stream.javadsl.RunnableGraph;
-import akka.stream.javadsl.Source;
+import akka.stream.javadsl.*;
 import com.sun.xml.internal.ws.util.CompletedFuture;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
@@ -35,20 +33,38 @@ public  class MainHttp {
                         parameter(QUERY_PARAMETR_COUNT, count -> {
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, count));
-                            mapped.mapAsync(1, p -> {
-                                CompletionStage<Object> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
+                            Flow<HttpRequest, HttpResponse, NotUsed> m = mapped.mapAsync(1, p -> {
+                                CompletionStage<Long> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
                                         .thenCompose(response -> {
                                             if(!Objects.isNull(response)) {
                                                 return CompletableFuture.completedFuture(response);
                                             } else {
-                                                RunnableGraph<Long> graph = Source.from(Collections.singletonList()).toMat(testSink, Keep.right()).run(materializer);
-                                                graph.map
+                                                Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
+                                                Flow<Pair<String, Integer>, String, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
+                                                    ArrayList<String> result = new ArrayList<String>(0);
+                                                    for(int i = 0; i < reqEntity.second(); ++i) {
+                                                        result.add(reqEntity.first());
+                                                    }
+                                                    return result;
+                                                });
+                                                Flow<Pair<String, Integer>, Long, NotUsed> flowMapped = flowConcat.mapAsync(1, pair -> {
+                                                    long startTime = System.currentTimeMillis();
+                                                    //request
+                                                    long endTime = System.currentTimeMillis();
+                                                    return
+                                                    //start timer, async http client, in thenCompose end timer and return future with result time
+                                                });
+                                                Sink<Pair<String, Integer>, CompletionStage<Long>> fold = Sink.fold(0, (agg, next) -> agg + next);
+                                                Sink<Long, CompletionStage<Long>> testSink = flow_2.toMat(fold, Keep.right());
+                                                RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList()).toMat(testSink, Keep.right());
+                                                CompletionStage<Long> result = graph.run(materializer);
+                                                return result;
                                             }
                                         });
+                                return res;
+                                        });
 
-                            })
-
-                            Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.<Pair<String, Integer>> create();
+                            });
 
 
                         }))));
