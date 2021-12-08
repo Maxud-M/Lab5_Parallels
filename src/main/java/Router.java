@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Future;
 
 import static akka.http.javadsl.server.Directives.*;
 
@@ -55,7 +56,7 @@ public  class MainHttp {
                                                     long startTime = System.currentTimeMillis();
                                                     AsyncHttpClient asyncHttpClient = asyncHttpClient();
                                                     Request request = get(url).build();
-                                                    Future<Response> whenResponse = 
+                                                    Future<Response> whenResponse = asyncHttpClient.executeRequest(request).thenCompose;
                                                     long endTime = System.currentTimeMillis();
                                                     return
                                                     //start timer, async http client, in thenCompose end timer and return future with result time
