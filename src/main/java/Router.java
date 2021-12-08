@@ -56,11 +56,11 @@ public  class MainHttp {
                                                     AsyncHttpClient asyncHttpClient = asyncHttpClient();
                                                     Request request = get(url).build();
                                                     long startTime = System.currentTimeMillis();
-                                                    Future<Response> whenResponse = asyncHttpClient.executeRequest(request)
+                                                    Future<Long> whenResponse = asyncHttpClient.executeRequest(request)
                                                             .toCompletableFuture()
                                                             .thenCompose(response1 -> {
                                                                     long endTime = System.currentTimeMillis();
-                                                                    return new Future<Long>(startTime - endTime);
+                                                                    return
                                                             });
                                                     long endTime = System.currentTimeMillis();
                                                     return
