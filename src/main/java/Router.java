@@ -53,7 +53,7 @@ public  class MainHttp {
                                                 Flow<Pair<String, Integer>, Long, NotUsed> flowMapped = flowConcat.mapAsync(1, pair -> {
                                                     long startTime = System.currentTimeMillis();
                                                     AsyncHttpClient asyncHttpClient = asyncHttpClient();
-                                                    Request 
+                                                    Request request = get()
                                                     long endTime = System.currentTimeMillis();
                                                     return
                                                     //start timer, async http client, in thenCompose end timer and return future with result time
