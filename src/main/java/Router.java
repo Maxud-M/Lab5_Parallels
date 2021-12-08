@@ -11,6 +11,7 @@ import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.*;
 import static org.asynchttpclient.Dsl.*;
 import com.sun.xml.internal.ws.util.CompletedFuture;
+import org.asynchttpclient.AsyncHttpClient;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public  class MainHttp {
                                                 });
                                                 Flow<Pair<String, Integer>, Long, NotUsed> flowMapped = flowConcat.mapAsync(1, pair -> {
                                                     long startTime = System.currentTimeMillis();
-                                                    //request
+                                                    AsyncHttpClient asyncHttpClient = asyncHttpClient();
                                                     long endTime = System.currentTimeMillis();
                                                     return
                                                     //start timer, async http client, in thenCompose end timer and return future with result time
