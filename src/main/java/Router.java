@@ -53,13 +53,14 @@ public  class MainHttp {
                                                     return result;
                                                 });
                                                 Flow<Pair<String, Integer>, Long, NotUsed> flowMapped = flowConcat.mapAsync(1, url -> {
-                                                    long startTime = System.currentTimeMillis();
                                                     AsyncHttpClient asyncHttpClient = asyncHttpClient();
                                                     Request request = get(url).build();
+                                                    long startTime = System.currentTimeMillis();
                                                     Future<Response> whenResponse = asyncHttpClient.executeRequest(request)
                                                             .toCompletableFuture()
                                                             .thenCompose(response1 -> {
-                                                                    
+                                                                    long endTime = System.currentTimeMillis();
+                                                                    return new Future<Long>(startTime - endTime);
                                                             });
                                                     long endTime = System.currentTimeMillis();
                                                     return
