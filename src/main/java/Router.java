@@ -54,7 +54,7 @@ public  class MainHttp {
                                                     long startTime = System.currentTimeMillis();
                                                     AsyncHttpClient asyncHttpClient = asyncHttpClient();
                                                     Request request = get(url).build();
-                                                    
+                                                    Future<>
                                                     long endTime = System.currentTimeMillis();
                                                     return
                                                     //start timer, async http client, in thenCompose end timer and return future with result time
