@@ -33,8 +33,10 @@ public  class MainHttp {
     public static final String QUERY_PARAMETR_COUNT = "count";
 
     public static Route createRoute(ActorMaterializer materializer, ActorSystem system, Http http, ActorRef cacheActor) {
-        return route(get(
-                () -> parameter(QUERY_PARAMETR_URL, testUrl ->
+        kakatel = lambda...
+
+        return route(get(() ->
+                parameter(QUERY_PARAMETR_URL, testUrl ->
                         parameter(QUERY_PARAMETR_COUNT, count -> {
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, count));
@@ -62,13 +64,11 @@ public  class MainHttp {
                                                                     long endTime = System.currentTimeMillis();
                                                                     return
                                                             });
-                                                    long endTime = System.currentTimeMillis();
-                                                    return
                                                     //start timer, async http client, in thenCompose end timer and return future with result time
                                                 });
                                                 Sink<Pair<String, Integer>, CompletionStage<Long>> fold = Sink.fold(0, (agg, next) -> agg + next);
-                                                Sink<Long, CompletionStage<Long>> testSink = flow_2.toMat(fold, Keep.right());
-                                                RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList()).toMat(testSink, Keep.right());
+                                                Sink<Long, CompletionStage<Long>> testSink = flowMapped.toMat(fold, Keep.right());
+                                                RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(r)).toMat(testSink, Keep.right());
                                                 CompletionStage<Long> result = graph.run(materializer);
                                                 return result;
                                             }
