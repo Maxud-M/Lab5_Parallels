@@ -13,6 +13,7 @@ import static org.asynchttpclient.Dsl.*;
 import com.sun.xml.internal.ws.util.CompletedFuture;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.Request;
+import org.asynchttpclient.Response;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public  class MainHttp {
                                                     long startTime = System.currentTimeMillis();
                                                     AsyncHttpClient asyncHttpClient = asyncHttpClient();
                                                     Request request = get(url).build();
-                                                    Future<>
+                                                    Future<Response> whenResponse = 
                                                     long endTime = System.currentTimeMillis();
                                                     return
                                                     //start timer, async http client, in thenCompose end timer and return future with result time
