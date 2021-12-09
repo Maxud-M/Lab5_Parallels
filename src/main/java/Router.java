@@ -67,8 +67,8 @@ public  class MainHttp {
                                                             });
                                                     return whenResponse;
                                                 });
-                                                Sink<Long, CompletionStage<Long>> fold = flowMapped.fold(0, (agg, next) -> agg + next);
-                                                Sink<Pair<String, Integer>, CompletionStage<Long>> testSink = flowMapped.toMat(fold, Keep.right());
+                                                //Sink<Long, CompletionStage<Long>> fold = flowMapped.fold(0, (agg, next) -> agg + next);
+                                                Sink<Pair<String, Integer>, CompletionStage<Long>> testSink = flowMapped.fold(0, (agg, next) -> agg + next).toMat(Sink.head(), Keep.right());
                                                 RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(new Pair(testUrl, count))).toMat(testSink, Keep.right());
                                                 CompletionStage<Long> result = graph.run(materializer);
                                                 return result;
