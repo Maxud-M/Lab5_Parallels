@@ -48,8 +48,9 @@ public  class MainHttp {
                                         .thenCompose(response -> {
                                             CompletionStage<Long> result;
                                             //if(response.equals(-1)) {
+                                            response
                                               //  return CompletableFuture.completedFuture(response);
-                                            //} else {  
+                                            //} else {
                                                 Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
                                                 Flow<Pair<String, Integer>, String, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
                                                     ArrayList<String> list = new ArrayList<>(0);
