@@ -85,7 +85,7 @@ public  class Router {
                                 //return HttpResponse.create().withEntity("The time of query requests is:" + res);
                             });
 
-                            Sink<HttpResponse, CompletionStage<HttpResponse>> sink = Sink.head();
+                            Sink<HttpResponse, CompletionStage<Long>> sink = Sink.head();
                             RunnableGraph<CompletionStage<HttpResponse>> graph = Source.empty(HttpRequest.class).via(result).toMat(sink, Keep.right());
 
                             return completeOKWithFuture(
