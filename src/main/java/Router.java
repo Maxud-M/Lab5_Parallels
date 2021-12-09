@@ -5,6 +5,7 @@ import akka.http.javadsl.Http;
 import akka.http.javadsl.marshallers.jackson.Jackson;
 import akka.http.javadsl.model.HttpRequest;
 import akka.http.javadsl.model.HttpResponse;
+import akka.http.javadsl.model.ResponseEntity;
 import akka.http.javadsl.server.Route;
 import akka.japi.Pair;
 import akka.pattern.Patterns;
@@ -77,7 +78,7 @@ public  class MainHttp {
                             });
                             Flow<HttpRequest, HttpResponse, NotUsed> result = m.map(res -> {
                                 cacheActor.tell(new CachingActor.StoreMessage(testUrl, res.toCompletableFuture().get()), ActorRef.noSender());
-                                return HttpResponse.create();
+                                return HttpResponse.create().withEntity(ResponseEntity());
                             });
 
                             Sink<HttpResponse, CompletionStage<HttpResponse>> sink = Sink.head();
