@@ -61,7 +61,7 @@ public  class MainHttp {
                                                             .toCompletableFuture()
                                                             .thenCompose(response1 -> {
                                                                     long endTime = System.currentTimeMillis();
-                                                                    return
+                                                                    return Future<Long>(endTime - startTime);
                                                             });
                                                     //start timer, async http client, in thenCompose end timer and return future with result time
                                                 });
