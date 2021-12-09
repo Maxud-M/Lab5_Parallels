@@ -42,15 +42,15 @@ public  class MainHttp {
                         parameter(QUERY_PARAMETR_COUNT, count -> {
                             int numOfReq = Integer.parseInt(count);
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
-                            Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, numOfReq));
-                            //Flow<HttpRequest, CompletionStage<Long>, NotUsed> m = mapped.mapAsync(1, p -> {
-                                CompletionStage<Long> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
-                                        .thenCompose(response -> {
+                            Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair<>(testUrl, numOfReq));
+                            Flow<HttpRequest, Long, NotUsed> m = mapped.mapAsync(1, p ->
+                                Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT).thenCompose(response -> {
                                             CompletionStage<Long> result;
-                                            //if(response.equals(-1)) {
-                                            response
-                                              //  return CompletableFuture.completedFuture(response);
-                                            //} else {
+                                            String resStr = String.valueOf(response);
+                                            Long resLong = Long.parseLong(resStr);
+                                            if(resLong != -1) {
+                                                result = CompletableFuture.completedFuture(resLong);
+                                            } else {
                                                 Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
                                                 Flow<Pair<String, Integer>, String, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
                                                     ArrayList<String> list = new ArrayList<>(0);
@@ -73,17 +73,15 @@ public  class MainHttp {
                                                 });
                                                 Sink<Long, CompletionStage<Long>> fold = Sink.fold(0L, (agg, next) -> agg + next);
                                                 Sink<Pair<String, Integer>, CompletionStage<Long>> testSink = flowMapped.toMat(fold, Keep.right());
-                                                RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(new Pair<String, Integer>(testUrl, numOfReq))).toMat(testSink, Keep.right());
+                                                RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(new Pair<>(testUrl, numOfReq))).toMat(testSink, Keep.right());
                                                 result = graph.run(materializer);
-                                           // }
+                                            }
                                             return result;
-                                        });
-                                //return res;
-                            //});
+                                }));
+                            });
                             Flow<HttpRequest, HttpResponse, NotUsed> result = m.map(res -> {
-                                Long time = res.toCompletableFuture().get();
-                                cacheActor.tell(new CachingActor.StoreMessage(testUrl, time), ActorRef.noSender());
-                                return HttpResponse.create().withEntity("The time of query requests is:" + time);
+                                cacheActor.tell(new CachingActor.StoreMessage(testUrl, res), ActorRef.noSender());
+                                return HttpResponse.create().withEntity("The time of query requests is:" + res);
                             });
 
                             Sink<HttpResponse, CompletionStage<HttpResponse>> sink = Sink.head();
