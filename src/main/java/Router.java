@@ -45,6 +45,7 @@ public  class Router {
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair<>(testUrl, numOfReq));
                             Flow<HttpRequest, Long, NotUsed> m = mapped.mapAsync(1, p ->
                                 Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT).thenCompose(response -> {
+                                            cout << 
                                             CompletionStage<Long> result;
                                             String resStr = String.valueOf(response);
                                             Long resLong = Long.parseLong(resStr);
