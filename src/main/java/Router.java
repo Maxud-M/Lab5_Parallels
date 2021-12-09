@@ -48,6 +48,8 @@ public  class Router {
                                             CompletionStage<Long> result;
                                             String resStr = String.valueOf(response);
                                             Long resLong = Long.parseLong(resStr);
+                                    System.out.println(testUrl);
+                                    System.out.println(resLong);
                                             if(resLong != -1) {
                                                 result = CompletableFuture.completedFuture(resLong);
                                             } else {
