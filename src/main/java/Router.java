@@ -81,7 +81,7 @@ public  class Router {
                             );
                             Flow<HttpRequest, HttpResponse, NotUsed> result = m.map(res -> {
                                 cacheActor.tell(new CachingActor.StoreMessage(testUrl, res), ActorRef.noSender());
-                                return Object()
+                                return 0;
                                 //return HttpResponse.create().withEntity("The time of query requests is:" + res);
                             });
 
