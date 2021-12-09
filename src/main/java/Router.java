@@ -2,6 +2,7 @@ import akka.NotUsed;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.http.javadsl.Http;
+import akka.http.javadsl.marshallers.jackson.Jackson;
 import akka.http.javadsl.model.HttpRequest;
 import akka.http.javadsl.model.HttpResponse;
 import akka.http.javadsl.server.Route;
@@ -79,7 +80,10 @@ public  class MainHttp {
                                 return HttpResponse.create();
                             });
 
-                            return completableWiht
+                            return completeOKWithFuture(
+                                    result,
+                                    Jackson.marshaller()
+                            );
 
 
 
