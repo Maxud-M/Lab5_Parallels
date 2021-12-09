@@ -47,40 +47,40 @@ public  class Router {
                                 Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT).thenCompose(response -> {
                                     System.out.println("HEY");
                                     System.out.println(numOfReq);
-                                            CompletionStage<Long> result;
-                                            String resStr = String.valueOf(response);
-                                            Long resLong = Long.parseLong(resStr);
+                                    CompletionStage<Long> result;
+                                    String resStr = String.valueOf(response);
+                                    Long resLong = Long.parseLong(resStr);
                                     System.out.println("HEY");
                                     System.out.println(resLong);
-                                            if(resLong != -1) {
-                                                result = CompletableFuture.completedFuture(resLong);
-                                            } else {
-                                                Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
-                                                Flow<Pair<String, Integer>, String, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
-                                                    ArrayList<String> list = new ArrayList<>(0);
-                                                    for(int i = 0; i < reqEntity.second(); ++i) {
-                                                        list.add(reqEntity.first());
-                                                    }
-                                                    return list;
-                                                });
-                                                Flow<Pair<String, Integer>, Long, NotUsed> flowMapped = flowConcat.mapAsync(1, url -> {
-                                                    AsyncHttpClient asyncHttpClient = asyncHttpClient();
-                                                    Request request = get(url).build();
-                                                    long startTime = System.currentTimeMillis();
-                                                    CompletableFuture<Long> whenResponse = asyncHttpClient.executeRequest(request)
-                                                            .toCompletableFuture()
-                                                            .thenCompose(response1 -> {
-                                                                    long endTime = System.currentTimeMillis();
-                                                                    return CompletableFuture.completedFuture(endTime - startTime);
-                                                            });
-                                                    return whenResponse;
-                                                });
-                                                Sink<Long, CompletionStage<Long>> fold = Sink.fold(0L, (agg, next) -> agg + next);
-                                                Sink<Pair<String, Integer>, CompletionStage<Long>> testSink = flowMapped.toMat(fold, Keep.right());
-                                                RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(new Pair<>(testUrl, numOfReq))).toMat(testSink, Keep.right());
-                                                result = graph.run(materializer);
+                                    if(resLong != -1) {
+                                        result = CompletableFuture.completedFuture(resLong);
+                                    } else {
+                                        Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
+                                        Flow<Pair<String, Integer>, String, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
+                                            ArrayList<String> list = new ArrayList<>(0);
+                                            for(int i = 0; i < reqEntity.second(); ++i) {
+                                                list.add(reqEntity.first());
                                             }
-                                            return result;
+                                            return list;
+                                        });
+                                        Flow<Pair<String, Integer>, Long, NotUsed> flowMapped = flowConcat.mapAsync(1, url -> {
+                                            AsyncHttpClient asyncHttpClient = asyncHttpClient();
+                                            Request request = get(url).build();
+                                            long startTime = System.currentTimeMillis();
+                                            CompletableFuture<Long> whenResponse = asyncHttpClient.executeRequest(request)
+                                                    .toCompletableFuture()
+                                                    .thenCompose(response1 -> {
+                                                        long endTime = System.currentTimeMillis();
+                                                        return CompletableFuture.completedFuture(endTime - startTime);
+                                                    });
+                                            return whenResponse;
+                                        });
+                                        Sink<Long, CompletionStage<Long>> fold = Sink.fold(0L, (agg, next) -> agg + next);
+                                        Sink<Pair<String, Integer>, CompletionStage<Long>> testSink = flowMapped.toMat(fold, Keep.right());
+                                        RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(new Pair<>(testUrl, numOfReq))).toMat(testSink, Keep.right());
+                                        result = graph.run(materializer);
+                                    }
+                                    return result;
                                 })
                             );
                             Flow<HttpRequest, Long, NotUsed> result = m.map(res -> {
