@@ -48,7 +48,7 @@ public  class MainHttp {
                                             } else {
                                                 Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
                                                 Flow<Pair<String, Integer>, String, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
-                                                    ArrayList<String> result = new ArrayList<String>(0);
+                                                    ArrayList<String> result = new ArrayList<>(0);
                                                     for(int i = 0; i < reqEntity.second(); ++i) {
                                                         result.add(reqEntity.first());
                                                     }
