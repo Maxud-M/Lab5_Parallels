@@ -43,11 +43,11 @@ public  class MainHttp {
                             int numOfReq = Integer.parseInt(count);
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, numOfReq));
-                            Flow<HttpRequest, CompletionStage<Long>, NotUsed> m = mapped.mapAsync(1, p -> {
+                            //Flow<HttpRequest, CompletionStage<Long>, NotUsed> m = mapped.mapAsync(1, p -> {
                                 CompletionStage<Long> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
                                         .thenCompose(response -> {
                                             CompletionStage<Long> result;
-                                            if(!Objects.isNull(response)) {
+                                            if(response.equals(-1)) {
                                                 return CompletableFuture.completedFuture(response);
                                             } else {
                                                 Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
@@ -77,8 +77,8 @@ public  class MainHttp {
                                             }
                                             return result;
                                         });
-                                return res;
-                            });
+                                //return res;
+                            //});
                             Flow<HttpRequest, HttpResponse, NotUsed> result = m.map(res -> {
                                 Long time = res.toCompletableFuture().get();
                                 cacheActor.tell(new CachingActor.StoreMessage(testUrl, time), ActorRef.noSender());
