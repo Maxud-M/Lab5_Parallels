@@ -47,9 +47,9 @@ public  class MainHttp {
                                 CompletionStage<Long> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
                                         .thenCompose(response -> {
                                             CompletionStage<Long> result;
-                                            if(response.equals(-1)) {
-                                                return CompletableFuture.completedFuture(response);
-                                            } else {
+                                            //if(response.equals(-1)) {
+                                              //  return CompletableFuture.completedFuture(response);
+                                            //} else {
                                                 Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
                                                 Flow<Pair<String, Integer>, String, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
                                                     ArrayList<String> list = new ArrayList<>(0);
@@ -74,7 +74,7 @@ public  class MainHttp {
                                                 Sink<Pair<String, Integer>, CompletionStage<Long>> testSink = flowMapped.toMat(fold, Keep.right());
                                                 RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(new Pair<String, Integer>(testUrl, numOfReq))).toMat(testSink, Keep.right());
                                                 result = graph.run(materializer);
-                                            }
+                                           // }
                                             return result;
                                         });
                                 //return res;
