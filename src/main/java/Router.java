@@ -40,21 +40,23 @@ public  class MainHttp {
         return route(get(() ->
                 parameter(QUERY_PARAMETR_URL, testUrl ->
                         parameter(QUERY_PARAMETR_COUNT, count -> {
+                            int numOfReq = Integer.parseInt(count);
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
-                            Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, Integer.parseInt(count)));
+                            Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, numOfReq));
                             Flow<HttpRequest, CompletionStage<Long>, NotUsed> m = mapped.mapAsync(1, p -> {
                                 CompletionStage<Long> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
                                         .thenCompose(response -> {
+                                            CompletionStage<Long> result;
                                             if(!Objects.isNull(response)) {
                                                 return CompletableFuture.completedFuture(response);
                                             } else {
-                                                /*Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
+                                                Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
                                                 Flow<Pair<String, Integer>, String, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
-                                                    ArrayList<String> result = new ArrayList<>(0);
+                                                    ArrayList<String> list = new ArrayList<>(0);
                                                     for(int i = 0; i < reqEntity.second(); ++i) {
-                                                        result.add(reqEntity.first());
+                                                        list.add(reqEntity.first());
                                                     }
-                                                    return result;
+                                                    return list;
                                                 });
                                                 Flow<Pair<String, Integer>, Long, NotUsed> flowMapped = flowConcat.mapAsync(1, url -> {
                                                     AsyncHttpClient asyncHttpClient = asyncHttpClient();
@@ -70,12 +72,10 @@ public  class MainHttp {
                                                 });
                                                 Sink<Long, CompletionStage<Long>> fold = Sink.fold(0L, (agg, next) -> agg + next);
                                                 Sink<Pair<String, Integer>, CompletionStage<Long>> testSink = flowMapped.toMat(fold, Keep.right());
-                                                RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(new Pair(testUrl, count))).toMat(testSink, Keep.right());
-                                                CompletionStage<Long> result = graph.run(materializer);
-                                                return result;
-
-
+                                                RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(new Pair<String, Integer>(testUrl, numOfReq))).toMat(testSink, Keep.right());
+                                                result = graph.run(materializer);
                                             }
+                                            return result;
                                         });
                                 return res;
                             });
