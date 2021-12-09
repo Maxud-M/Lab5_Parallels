@@ -41,6 +41,8 @@ public  class Router {
                 parameter(QUERY_PARAMETR_URL, testUrl ->
                         parameter(QUERY_PARAMETR_COUNT, count -> {
                             int numOfReq = Integer.parseInt(count);
+                            System.out.println("HEY");
+                            System.out.println(numOfReq);
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair<>(testUrl, numOfReq));
                             Flow<HttpRequest, Long, NotUsed> m = mapped.mapAsync(1, p ->
@@ -48,7 +50,7 @@ public  class Router {
                                             CompletionStage<Long> result;
                                             String resStr = String.valueOf(response);
                                             Long resLong = Long.parseLong(resStr);
-                                    System.out.println('HEY');
+                                    System.out.println("HEY");
                                     System.out.println(resLong);
                                             if(resLong != -1) {
                                                 result = CompletableFuture.completedFuture(resLong);
