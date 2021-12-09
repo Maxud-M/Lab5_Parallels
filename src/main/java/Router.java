@@ -74,9 +74,11 @@ public  class MainHttp {
                                         });
                                 return res;
                             });
-                            m.map(res -> {
-                                return HttpResponse.create().withEntity();
-                            })
+                            Flow<HttpRequest, HttpResponse, NotUsed> result = m.map(res -> {
+                                return HttpResponse.create();
+                            });
+
+                            
 
                         });
 
