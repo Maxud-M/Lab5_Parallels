@@ -57,13 +57,13 @@ public  class MainHttp {
                                                     AsyncHttpClient asyncHttpClient = asyncHttpClient();
                                                     Request request = get(url).build();
                                                     long startTime = System.currentTimeMillis();
-                                                    Future<Long> whenResponse = asyncHttpClient.executeRequest(request)
+                                                    CompletableFuture<Long> whenResponse = asyncHttpClient.executeRequest(request)
                                                             .toCompletableFuture()
                                                             .thenCompose(response1 -> {
                                                                     long endTime = System.currentTimeMillis();
-                                                                    return Future<Long>(endTime - startTime);
+                                                                    return CompletableFuture.completedFuture(endTime - startTime);
                                                             });
-                                                    //start timer, async http client, in thenCompose end timer and return future with result time
+                                                    return whenResponse;
                                                 });
                                                 Sink<Pair<String, Integer>, CompletionStage<Long>> fold = Sink.fold(0, (agg, next) -> agg + next);
                                                 Sink<Long, CompletionStage<Long>> testSink = flowMapped.toMat(fold, Keep.right());
