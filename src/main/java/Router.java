@@ -77,8 +77,9 @@ public  class MainHttp {
                                 return res;
                             });
                             Flow<HttpRequest, HttpResponse, NotUsed> result = m.map(res -> {
-                                cacheActor.tell(new CachingActor.StoreMessage(testUrl, res.toCompletableFuture().get()), ActorRef.noSender());
-                                return HttpResponse.create().withEntity(Http)
+                                Long time = res.toCompletableFuture().get();
+                                cacheActor.tell(new CachingActor.StoreMessage(testUrl, time), ActorRef.noSender());
+                                return HttpResponse.create().withEntity("The time of query requests is:" + time);
                             });
 
                             Sink<HttpResponse, CompletionStage<HttpResponse>> sink = Sink.head();
