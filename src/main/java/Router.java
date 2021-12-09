@@ -81,19 +81,15 @@ public  class MainHttp {
                             });
 
                             Sink<HttpResponse, CompletionStage<HttpResponse>> sink = Sink.head();
-                            RunnableGraph<CompletionStage<Long>> graph = Source.empty(HttpRequest.class).via(result).toMat(sink, Keep.);
+                            RunnableGraph<CompletionStage<HttpResponse>> graph = Source.empty(HttpRequest.class).via(result).toMat(sink, Keep.right());
 
                             return completeOKWithFuture(
-                                    ,
+                                    graph.run(materializer),
                                     Jackson.marshaller()
                             );
-
-
-
-                        });
-
-
-                        }))));
+                        })
+                )
+        ));
 
     }
 }
