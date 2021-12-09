@@ -91,7 +91,7 @@ public  class Router {
                             });
 
                             Sink<Long, CompletionStage<Long>> sink = Sink.head();
-                            RunnableGraph<CompletionStage<Long>> graph = Source.empty(HttpRequest.class).via(result).toMat(sink, Keep.right());
+                            RunnableGraph<CompletionStage<Long>> graph = Source.of(HttpRequest.class).via(result).toMat(sink, Keep.right());
 
                             return completeOKWithFuture(
                                     graph.run(materializer),
