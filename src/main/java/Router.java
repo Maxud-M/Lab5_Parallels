@@ -72,36 +72,7 @@ public  class MainHttp {
                                                 Sink<Pair<String, Integer>, CompletionStage<Long>> testSink = flowMapped.toMat(fold, Keep.right());
                                                 RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(new Pair(testUrl, count))).toMat(testSink, Keep.right());
                                                 CompletionStage<Long> result = graph.run(materializer);
-                                                return result;*/
-
-
-
-
-                                                Flow<String, String, NotUsed> f = Flow.create();
-                                                Flow<String, String, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
-                                                    ArrayList<String> result = new ArrayList<>(0);
-                                                    int num = Integer.parseInt(count);
-                                                    for(int i = 0; i < num; ++i) {
-                                                        result.add(testUrl);
-                                                    }
-                                                    return result;
-                                                });
-                                                Flow<String, Long, NotUsed> flowMapped = flowConcat.mapAsync(1, url -> {
-                                                    AsyncHttpClient asyncHttpClient = asyncHttpClient();
-                                                    Request request = get(url).build();
-                                                    long startTime = System.currentTimeMillis();
-                                                    CompletableFuture<Long> whenResponse = asyncHttpClient.executeRequest(request)
-                                                            .toCompletableFuture()
-                                                            .thenCompose(response1 -> {
-                                                                    long endTime = System.currentTimeMillis();
-                                                                    return CompletableFuture.completedFuture(endTime - startTime);
-                                                            });
-                                                    return whenResponse;
-                                                });
-                                                Sink<Long, CompletionStage<Long>> fold = Sink.fold(0L, (agg, next) -> agg + next);
-                                                Sink<String, CompletionStage<Long>> testSink = flowMapped.toMat(fold, Keep.right());
-                                                RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList("String")).toMat(testSink, Keep.right());
-                                                CompletionStage<Long> result = graph.run(materializer);
+                                                return result;
 
 
                                             }
