@@ -76,10 +76,9 @@ public  class MainHttp {
                             });
                             Flow<HttpRequest, HttpResponse, NotUsed> result = m.map(res -> {
                                 cacheActor.tell(new CachingActor.StoreMessage(testUrl, res.toCompletableFuture().get()), ActorRef.noSender());
-
                                 return HttpResponse.create();
                             });
-                            
+
 
 
 
