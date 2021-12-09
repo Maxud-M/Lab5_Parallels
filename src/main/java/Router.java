@@ -44,7 +44,7 @@ public  class MainHttp {
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair(testUrl, numOfReq));
                             Flow<HttpRequest, CompletionStage<Long>, NotUsed> m = mapped.mapAsync(1, p -> {
-                                CompletionStage<Long> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
+                                CompletionStage<CachingActor.GetMessage> res = Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT)
                                         .thenCompose(response -> {
                                             CompletionStage<Long> result;
                                             if(!Objects.isNull(response)) {
