@@ -29,7 +29,7 @@ import java.util.concurrent.Future;
 
 import static akka.http.javadsl.server.Directives.*;
 
-public  class MainHttp {
+public  class Router {
 
     static final Duration TIMEOUT = Duration.ofSeconds(5);
     public static final String QUERY_PARAMETR_URL = "testUrl";
@@ -77,8 +77,8 @@ public  class MainHttp {
                                                 result = graph.run(materializer);
                                             }
                                             return result;
-                                }));
-                            });
+                                })
+                            );
                             Flow<HttpRequest, HttpResponse, NotUsed> result = m.map(res -> {
                                 cacheActor.tell(new CachingActor.StoreMessage(testUrl, res), ActorRef.noSender());
                                 return HttpResponse.create().withEntity("The time of query requests is:" + res);
@@ -94,6 +94,5 @@ public  class MainHttp {
                         })
                 )
         ));
-
     }
 }

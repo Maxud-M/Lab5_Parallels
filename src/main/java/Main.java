@@ -19,7 +19,7 @@ public class Main {
         ActorRef cacheActor = system.actorOf(Props.create(CachingActor.class));
         final ActorMaterializer materializer = ActorMaterializer.create(system);
         final Http http = Http.get(system);
-        final Flow<HttpRequest, HttpResponse, NotUsed> routeFlow = MainHttp.createRoute(materializer, system, http, cacheActor)
+        final Flow<HttpRequest, HttpResponse, NotUsed> routeFlow = Router.createRoute(materializer, system, http, cacheActor)
                 .flow(system, materializer);
         final CompletionStage<ServerBinding> binding = http.bindAndHandle(
                 routeFlow,
