@@ -80,8 +80,11 @@ public  class MainHttp {
                                 return HttpResponse.create();
                             });
 
+                            Sink<HttpResponse, CompletionStage<HttpResponse>> sink = Sink.head();
+                            RunnableGraph<CompletionStage<Long>> graph = Source.empty(HttpRequest.class).via(result).toMat(sink, Keep.);
+
                             return completeOKWithFuture(
-                                    result,
+                                    ,
                                     Jackson.marshaller()
                             );
 
