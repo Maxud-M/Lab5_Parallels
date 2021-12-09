@@ -33,7 +33,6 @@ public  class MainHttp {
     public static final String QUERY_PARAMETR_COUNT = "count";
 
     public static Route createRoute(ActorMaterializer materializer, ActorSystem system, Http http, ActorRef cacheActor) {
-        kakatel = lambda...
 
         return route(get(() ->
                 parameter(QUERY_PARAMETR_URL, testUrl ->
