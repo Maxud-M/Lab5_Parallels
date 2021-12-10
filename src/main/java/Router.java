@@ -40,7 +40,6 @@ public  class Router {
         return route(get(() ->
                 parameter(QUERY_PARAMETR_URL, testUrl ->
                         parameter(QUERY_PARAMETR_COUNT, count -> {
-                            System.out.println(HttpRequest.GET("http://localhost:8080/?testUrl=" + testUrl + "&count=" + count).entity().getContentType().toString());
                             int numOfReq = Integer.parseInt(count);
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair<>(testUrl, numOfReq));
