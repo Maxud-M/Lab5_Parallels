@@ -67,6 +67,7 @@ public  class Router {
                                                     .toCompletableFuture()
                                                     .thenCompose(response1 -> {
                                                         long endTime = System.currentTimeMillis();
+                                                        System.out.println(endTime - startTime);
                                                         return CompletableFuture.completedFuture((endTime - startTime) / getReqParams.second());
                                                     });
                                             return whenResponse;
@@ -80,6 +81,7 @@ public  class Router {
                                 })
                             );
                             Flow<HttpRequest, Long, NotUsed> result = m.map(res -> {
+                                System.out.println(res);
                                 cacheActor.tell(new CachingActor.StoreMessage(testUrl, res), ActorRef.noSender());
                                 return res;
                             });
