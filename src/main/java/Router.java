@@ -41,16 +41,13 @@ public  class Router {
                 parameter(QUERY_PARAMETR_URL, testUrl ->
                         parameter(QUERY_PARAMETR_COUNT, count -> {
                             int numOfReq = Integer.parseInt(count);
-                            Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = Flow.of(HttpRequest.class);
+                            Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
+                            Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair<>(testUrl, numOfReq));
                             Flow<HttpRequest, Long, NotUsed> m = mapped.mapAsync(1, p ->
                                 Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT).thenCompose(response -> {
-                                    System.out.println("HEY");
-                                    System.out.println(numOfReq);
                                     CompletionStage<Long> result;
                                     String resStr = String.valueOf(response);
                                     Long resLong = Long.parseLong(resStr);
-                                    System.out.println("HEY");
-                                    System.out.println(resLong);
                                     if(resLong != -1) {
                                         result = CompletableFuture.completedFuture(resLong);
                                     } else {
@@ -83,14 +80,12 @@ public  class Router {
                                 })
                             );
                             Flow<HttpRequest, Long, NotUsed> result = m.map(res -> {
-                                System.out.println("huy");
                                 cacheActor.tell(new CachingActor.StoreMessage(testUrl, res), ActorRef.noSender());
                                 return res;
-                                //return HttpResponse.create().withEntity("The time of query requests is:" + res);
                             });
 
                             Sink<Long, CompletionStage<Long>> sink = Sink.head();
-                            RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(new Pair<>(testUrl, numOfReq))).via(result).toMat(sink, Keep.right());
+                            RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(HttpRequest.create())).via(result).toMat(sink, Keep.right());
 
                             return completeOKWithFuture(
                                     graph.run(materializer),
