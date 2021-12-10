@@ -40,10 +40,8 @@ public  class Router {
         return route(get(() ->
                 parameter(QUERY_PARAMETR_URL, testUrl ->
                         parameter(QUERY_PARAMETR_COUNT, count -> {
+                            System.out.println(HttpRequest.GET("http://localhost:8080/?testUrl=" + testUrl + "&count=" + count).entity().getContentType().toString());
                             int numOfReq = Integer.parseInt(count);
-                            HttpRequest request1 = HttpRequest.create("http://localhost:8080/?testUrl=" + testUrl + "&count=" + count);
-                            System.out.println(request1.getUri().query().toList());
-                            System.out.println(request1.entity());
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair<>(testUrl, numOfReq));
                             Flow<HttpRequest, Long, NotUsed> m = mapped.mapAsync(1, p ->
@@ -62,7 +60,7 @@ public  class Router {
                                             }
                                             return list;
                                         });
-                                        Flow<Pair<String, Integer>, Long, NotUsed> flowMapped = flowConcat.mapAsync(1, getReqParams -> {
+                                        Flow<Pair<String, Integer>, Long, NotUsed> flowTimer = flowConcat.mapAsync(1, getReqParams -> {
                                             AsyncHttpClient asyncHttpClient = asyncHttpClient();
                                             Request request = get(getReqParams.first()).build();
                                             long startTime = System.currentTimeMillis();
@@ -76,7 +74,7 @@ public  class Router {
                                             return whenResponse;
                                         });
                                         Sink<Long, CompletionStage<Long>> fold = Sink.fold(0L, (agg, next) -> agg + next);
-                                        Sink<Pair<String, Integer>, CompletionStage<Long>> testSink = flowMapped.toMat(fold, Keep.right());
+                                        Sink<Pair<String, Integer>, CompletionStage<Long>> testSink = flowTimer.toMat(fold, Keep.right());
                                         RunnableGraph<CompletionStage<Long>> graph = Source.from(Collections.singletonList(new Pair<>(testUrl, numOfReq))).toMat(testSink, Keep.right());
                                         result = graph.run(materializer);
                                     }
@@ -84,7 +82,6 @@ public  class Router {
                                 })
                             );
                             Flow<HttpRequest, Long, NotUsed> result = m.map(res -> {
-                                System.out.println(res);
                                 cacheActor.tell(new CachingActor.StoreMessage(testUrl, res), ActorRef.noSender());
                                 return res;
                             });
