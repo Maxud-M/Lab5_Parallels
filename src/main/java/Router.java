@@ -46,10 +46,10 @@ public  class Router {
                             Flow<HttpRequest, Long, NotUsed> m = mapped.mapAsync(1, p ->
                                 Patterns.ask(cacheActor, new CachingActor.GetMessage(testUrl), TIMEOUT).thenCompose(response -> {
                                     CompletionStage<Long> result;
-                                    String resStr = String.valueOf(response);
-                                    Long resLong = Long.parseLong(resStr);
-                                    if(resLong != -1) {
-                                        result = CompletableFuture.completedFuture(resLong);
+                                    String responseStr = String.valueOf(response);
+                                    Long responseLong = Long.parseLong(responseStr);
+                                    if(responseLong != -1) {
+                                        result = CompletableFuture.completedFuture(responseLong);
                                     } else {
                                         Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
                                         Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
