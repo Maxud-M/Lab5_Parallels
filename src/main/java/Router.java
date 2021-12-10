@@ -52,22 +52,22 @@ public  class Router {
                                         result = CompletableFuture.completedFuture(resLong);
                                     } else {
                                         Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> f = Flow.create();
-                                        Flow<Pair<String, Integer>, String, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
-                                            ArrayList<String> list = new ArrayList<>(0);
+                                        Flow<Pair<String, Integer>, Pair<String, Integer>, NotUsed> flowConcat = f.mapConcat(reqEntity -> {
+                                            ArrayList<Pair<String, Integer>> list = new ArrayList<>(0);
                                             for(int i = 0; i < reqEntity.second(); ++i) {
-                                                list.add(reqEntity.first());
+                                                list.add(reqEntity);
                                             }
                                             return list;
                                         });
-                                        Flow<Pair<String, Integer>, Long, NotUsed> flowMapped = flowConcat.mapAsync(1, url -> {
+                                        Flow<Pair<String, Integer>, Long, NotUsed> flowMapped = flowConcat.mapAsync(1, getReqParams -> {
                                             AsyncHttpClient asyncHttpClient = asyncHttpClient();
-                                            Request request = get(url).build();
+                                            Request request = get(getReqParams.first()).build();
                                             long startTime = System.currentTimeMillis();
                                             CompletableFuture<Long> whenResponse = asyncHttpClient.executeRequest(request)
                                                     .toCompletableFuture()
                                                     .thenCompose(response1 -> {
                                                         long endTime = System.currentTimeMillis();
-                                                        return CompletableFuture.completedFuture(endTime - startTime);
+                                                        return CompletableFuture.completedFuture((endTime - startTime) / getReqParams.second());
                                                     });
                                             return whenResponse;
                                         });
