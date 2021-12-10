@@ -67,7 +67,7 @@ public  class Router {
                                                     .toCompletableFuture()
                                                     .thenCompose(response1 -> {
                                                         long endTime = System.currentTimeMillis();
-                                                        System.out.println("ALOOOOOOOOOOO");
+                                                        System.out.println(endTime - startTime);
                                                         return CompletableFuture.completedFuture((endTime - startTime) / getReqParams.second());
                                                     });
                                             return whenResponse;
