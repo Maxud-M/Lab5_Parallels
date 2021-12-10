@@ -42,8 +42,8 @@ public  class Router {
                         parameter(QUERY_PARAMETR_COUNT, count -> {
                             int numOfReq = Integer.parseInt(count);
                             HttpRequest request1 = HttpRequest.create("http://localhost:8080/?testUrl=" + testUrl + "&count=" + count);
-                            System.out.println(request.getUri().query().toList());
-                            System.out.println(request.entity());
+                            System.out.println(request1.getUri().query().toList());
+                            System.out.println(request1.entity());
                             Flow<HttpRequest, HttpRequest, NotUsed> flow = Flow.of(HttpRequest.class);
                             Flow<HttpRequest, Pair<String, Integer>, NotUsed> mapped = flow.map(req -> new Pair<>(testUrl, numOfReq));
                             Flow<HttpRequest, Long, NotUsed> m = mapped.mapAsync(1, p ->
