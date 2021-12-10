@@ -59,16 +59,16 @@ public  class Router {
                                             }
                                             return list;
                                         });
-                                        Flow<Pair<String, Integer>, Long, NotUsed> flowTimer = flowConcat.mapAsync(1, getReqParams -> {
+                                        Flow<Pair<String, Integer>, Long, NotUsed> flowTimer = flowConcat.mapAsync(1, reqEntity -> {
                                             AsyncHttpClient asyncHttpClient = asyncHttpClient();
-                                            Request request = get(getReqParams.first()).build();
+                                            Request request = get(reqEntity.first()).build();
                                             long startTime = System.currentTimeMillis();
                                             CompletableFuture<Long> whenResponse = asyncHttpClient.executeRequest(request)
                                                     .toCompletableFuture()
                                                     .thenCompose(response1 -> {
                                                         long endTime = System.currentTimeMillis();
                                                         System.out.println(endTime - startTime);
-                                                        return CompletableFuture.completedFuture((endTime - startTime) / getReqParams.second());
+                                                        return CompletableFuture.completedFuture((endTime - startTime) / reqEntity.second());
                                                     });
                                             return whenResponse;
                                         });
